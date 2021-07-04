@@ -36,6 +36,7 @@ namespace Login.Business
 
         public void RecoverPassword(RecoverPasswordDTO recover)
         {
+            DomainException.When(!recover.Email.Contains("@"), ErrorMessages.ERROR_EMAIL);
             var user = _repository.GetUsuarioByUsername(recover.Email, recover.SystemId);
 
             if (user != null)
@@ -59,7 +60,9 @@ namespace Login.Business
             DomainException.When(string.IsNullOrEmpty(user.FirstName), ErrorMessages.ERROR_FIRST_NAME);
             DomainException.When(string.IsNullOrEmpty(user.LastName), ErrorMessages.ERROR_LAST_NAME);
             DomainException.When(string.IsNullOrEmpty(user.SocialNumber), ErrorMessages.ERROR_SOCIAL_NUMBER);
+            DomainException.When(user.SocialNumber.Length < 11, ErrorMessages.ERROR_SOCIAL_NUMBER);
             DomainException.When(string.IsNullOrEmpty(user.CellPhoneNumber), ErrorMessages.ERROR_CELLPHONE);
+            DomainException.When(user.CellPhoneNumber.Length < 15, ErrorMessages.ERROR_CELLPHONE);
             DomainException.When(string.IsNullOrEmpty(user.Email), ErrorMessages.ERROR_EMAIL_NULL);
             DomainException.When(!user.Email.Contains("@"), ErrorMessages.ERROR_EMAIL);
             DomainException.When(string.IsNullOrEmpty(user.UserPassword), ErrorMessages.ERROR_PASSWORD);
